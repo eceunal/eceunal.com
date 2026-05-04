@@ -8,15 +8,24 @@ export class MainScene extends Phaser.Scene {
     super({ key: 'MainScene' });
   }
 
-  create() {
-    this.add.text(400, 50, 'Initialized. You can move the box below left or right now. So much fun, right?', { 
-      color: '#00ff00', 
-      fontFamily: 'monospace' 
-    }).setOrigin(0.5);
+  preload() {
+    this.load.image('tiles', '/assets/FD_Dungeon_Free.png');
+    this.load.tilemapTiledJSON('map', '/assets/second.tmj');
+    
+    this.load.spritesheet('player', '/assets/custom/dude.png', {
+      frameWidth: 128,
+      frameHeight: 128
+    });
+  }
 
-    this.player = this.physics.add.sprite(400, 300, '') as Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
-    this.player.setDisplaySize(32, 32);
-    this.player.setTint(0xff0000);
+  create() {
+    const map = this.make.tilemap({ key: 'map' });
+    const tileset = map.addTilesetImage('FD_Dungeon_Free', 'tiles');
+
+    map.createLayer('walls', tileset!, 0, 0);
+    map.createLayer('floors', tileset!, 0, 0);
+
+    this.player = this.physics.add.sprite(50, 420, 'player');
     this.player.setCollideWorldBounds(true);
 
     if (this.input.keyboard) {

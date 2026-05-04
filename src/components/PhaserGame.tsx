@@ -11,8 +11,8 @@ export default function PhaserGame() {
     if (typeof window !== 'undefined' && !gameRef.current) {
       const config: Phaser.Types.Core.GameConfig = {
         type: Phaser.AUTO,
-        width: 800,
-        height: 600,
+        width: 1024,
+        height: 640,
         parent: 'game-container', 
         backgroundColor: '#111111',
         physics: {
