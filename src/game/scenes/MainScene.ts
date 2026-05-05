@@ -9,6 +9,9 @@ export class MainScene extends Phaser.Scene {
   }
 
   preload() {
+    this.load.image('highschool-badge', 'assets/ifl_logo.png');
+    this.load.image('university-badge', 'assets/bilkent_logo.png');
+
     this.load.image('tiles', '/assets/FD_Dungeon_Free.png');
     this.load.tilemapTiledJSON('map', '/assets/second.tmj');
     
@@ -32,6 +35,13 @@ export class MainScene extends Phaser.Scene {
     this.player.setCollideWorldBounds(true);
 
     this.physics.add.collider(this.player, floorLayer!);
+
+    const highschoolBadge = this.add.image(100, 220, 'highschool-badge');
+    highschoolBadge.setScale(0.1);
+
+    const universityBadge = this.add.image(100, 100, 'university-badge');
+    universityBadge.setScale(0.2);
+
 
     if (this.input.keyboard) {
       this.cursors = this.input.keyboard.createCursorKeys();
