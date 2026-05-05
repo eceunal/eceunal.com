@@ -3,7 +3,7 @@ import Phaser from 'phaser';
 export class MainScene extends Phaser.Scene {
   private player!: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
   private cursors!: Phaser.Types.Input.Keyboard.CursorKeys;
-  
+
   constructor() {
     super({ key: 'MainScene' });
   }
@@ -19,14 +19,19 @@ export class MainScene extends Phaser.Scene {
   }
 
   create() {
+    this.physics.world.gravity.y = 1000;
+
     const map = this.make.tilemap({ key: 'map' });
     const tileset = map.addTilesetImage('FD_Dungeon_Free', 'tiles');
 
     map.createLayer('walls', tileset!, 0, 0);
-    map.createLayer('floors', tileset!, 0, 0);
+    const floorLayer = map.createLayer('floors', tileset!, 0, 0);
+    floorLayer!.setCollisionByExclusion([-1]);
 
     this.player = this.physics.add.sprite(50, 420, 'player');
     this.player.setCollideWorldBounds(true);
+
+    this.physics.add.collider(this.player, floorLayer!);
 
     if (this.input.keyboard) {
       this.cursors = this.input.keyboard.createCursorKeys();
@@ -34,12 +39,18 @@ export class MainScene extends Phaser.Scene {
   }
 
   update() {
-    this.player.setVelocity(0);
+    this.player.setVelocityX(0);
 
     if (this.cursors.left.isDown) {
-      this.player.setVelocityX(-250); // Negative X moves left
+      this.player.setVelocityX(-250);
+      this.player.setFlipX(true);
     } else if (this.cursors.right.isDown) {
-      this.player.setVelocityX(250);  // Positive X moves right
+      this.player.setVelocityX(250);
+      this.player.setFlipX(false);
+    }
+
+    if (this.cursors.up.isDown && this.player.body.blocked.down) {
+      this.player.setVelocityY(-450);
     }
   }
 }
